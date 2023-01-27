@@ -1,0 +1,19 @@
+#lang racket
+
+; Carregamento do banco de palavras
+(define n (random 4))  ; var n de 0 a 4 exclusivo
+
+(define entrada (open-input-file "palavras.txt"))
+
+(define (carregar-palavras n)  ; var n é a linha a ser lida
+  (define palavra (read-line entrada))
+
+  (if (= n 0)  ; se estivermos na linha correspondente a var n
+    palavra  ; retorna a palavra
+    (carregar-palavras (sub1 n))  ; joga palavra no lixo e vai pra próxima linha
+  )
+)
+
+; Execução propriamente dita
+"Forca!"
+(define resposta (carregar-palavras n))
