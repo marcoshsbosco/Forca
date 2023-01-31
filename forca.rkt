@@ -1,7 +1,7 @@
 #lang racket
 
 ; Carregamento do banco de palavras
-(define n (random 4))  ; var n de 0 a 4 exclusivo
+(define n (random 36172))  ; var n de 0 a 36172 exclusivo
 
 (define entrada (open-input-file "palavras.txt"))
 
