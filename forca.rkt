@@ -14,13 +14,32 @@
   )
 )
 
+; função para trocar letras acentuadas por normais
+(define (troca caracter)
+  (define com-acento
+    (member caracter '(#\á #\ã #\â #\ê #\é #\í #\ó #\ô #\õ #\ú #\ç))
+  )
+
+  (if com-acento
+    (cond
+      [(member (first com-acento) `(#\á #\ã #\â)) #\a]
+      [(member (first com-acento) `(#\ê #\é)) #\e]
+      [(member (first com-acento) `(#\í)) #\i]
+      [(member (first com-acento) `(#\ó #\ô #\õ)) #\o]
+      [(member (first com-acento) `(#\ú)) #\u]
+      [(member (first com-acento) `(#\ç)) #\c]
+    )
+    caracter
+  )
+)
+
 ; Display das letras encontradas
-(define (progresso r letras-adivinhadas la)  ; retorna uma lista com as letras e underlines dependendo das letras adivinhadas  
+(define (progresso r letras-adivinhadas la)  ; retorna uma lista com as letras e underlines dependendo das letras adivinhadas
   (cond
     [(empty? r) empty]
     [(empty? la) (cons #\_ (progresso (rest r) letras-adivinhadas letras-adivinhadas))]
-    [(equal? (first r) (first la)) (cons (first r) (progresso (rest r) letras-adivinhadas letras-adivinhadas))]
-    [(not (equal? (first r) (first la))) (progresso r letras-adivinhadas (rest la))]
+    [(equal? (troca (first r)) (first la)) (cons (first r) (progresso (rest r) letras-adivinhadas letras-adivinhadas))]
+    [(not (equal? (troca (first r)) (first la))) (progresso r letras-adivinhadas (rest la))]
   )
 )
 
