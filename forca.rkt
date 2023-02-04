@@ -58,22 +58,42 @@
   )
 )
 
+
+
+;vidas
+;comparar letras-advinhadas com resposta
+; se a letra estiver no array, nao fazer nada
+; se a letra nao estiver no array, fazer vidas - 1
+
+(define (checar-vidas v l r)
+  (cond
+    [(empty? r) (sub1 v)]
+    [(equal? (troca (first r)) l) v]
+    [else (checar-vidas v l (rest r))]
+  )
+)
+
+
+
 ; Lógica principal
-(define (loop letras-adivinhadas resposta)
+(define (loop letras-adivinhadas resposta vidas)
+  (println vidas)
   (print-progresso letras-adivinhadas resposta)
 
   (cond
     [(checar-vitoria (string->list resposta) letras-adivinhadas) (println "Vitória!")]
-    ; [checar derrota aqui]
+    [(equal? vidas 0) (println "Que pena, você perdeu!")]
     [else
       (define letra (first (string->list (read-line))))
-      (loop (cons letra letras-adivinhadas) resposta)
+      (loop (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta)))
     ]
   )
-)
+ )
 
 ; Execução propriamente dita
 "Forca!"
 (define resposta (carregar-palavras n))
 (println (string-append "DEBUG: a resposta é " resposta))
-(loop '() resposta)
+
+(loop '() resposta 5)
+
