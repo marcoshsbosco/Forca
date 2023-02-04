@@ -49,12 +49,27 @@
   (println (list->string (progresso r letras-adivinhadas letras-adivinhadas)))  ; pega o retorno de progresso e transforma a lista em string pra retornar
 )
 
+; Checagem de condição de vitória
+(define (checar-vitoria resposta letras-adivinhadas)
+  (cond
+    [(empty? resposta) #t]
+    [(member (first resposta) letras-adivinhadas) (checar-vitoria (rest resposta) letras-adivinhadas)]
+    [else #f]
+  )
+)
+
 ; Lógica principal
 (define (loop letras-adivinhadas resposta)
   (print-progresso letras-adivinhadas resposta)
 
-  (define letra (first (string->list (read-line))))
-  (loop (cons letra letras-adivinhadas) resposta)
+  (cond
+    [(checar-vitoria (string->list resposta) letras-adivinhadas) (println "Vitória!")]
+    ; [checar derrota aqui]
+    [else
+      (define letra (first (string->list (read-line))))
+      (loop (cons letra letras-adivinhadas) resposta)
+    ]
+  )
 )
 
 ; Execução propriamente dita
