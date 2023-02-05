@@ -81,7 +81,7 @@
   )
 )
 
-(define gerarLetra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
+(define gerar-letra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
 (define (print-vitoria resposta letras-adivinhadas)
         (cond [(checar-vitoria (string->list resposta) letras-adivinhadas) (displayln "\n\nParabéns, você ganhou!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
@@ -220,12 +220,14 @@
 ; Automatico - lógica principal
 
 
-(define (automaticForca letras-adivinhadas resposta vidas)
-  (define letraRamdom (random 26))
-  (define letraGerada (list-ref gerarLetra letraRamdom))
+(define (forca-automatica letras-adivinhadas resposta vidas)
+  (define letra-random (random 26))
+  (define letra-gerada (list-ref gerar-letra letra-random))
+  
   (displayln (string-append "\n***************************************Você tem " (~r vidas) " vidas\n"))
   (print-forca vidas)
-  (displayln (string-append "Letra gerada: " letraGerada "\n"))
+  
+  (displayln (string-append "Letra gerada: " letra-gerada "\n"))
   
   (displayln "\nLetras adivinhadas: ")
   (void (map display letras-adivinhadas))
@@ -237,8 +239,8 @@
     [(checar-vitoria (string->list resposta) letras-adivinhadas) (print-vitoria resposta letras-adivinhadas)]
     [(equal? vidas 0) (print-derrota vidas)]
     [else
-       (define letra (first (string->list letraGerada)))
-       (automaticForca
+       (define letra (first (string->list letra-gerada)))
+       (forca-automatica
           (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta))
       )
     ]
@@ -251,7 +253,7 @@
 
 (define resposta (carregar-palavras (random 36172) (open-input-file "palavras.txt")))
 (println (string-append "A resposta é " resposta))
-(automaticForca '() resposta 6)
+(forca-automatica '() resposta 6)
 
 
 (displayln "\n\n\n\n######################################Agora é sua vez############################################\n\n")
