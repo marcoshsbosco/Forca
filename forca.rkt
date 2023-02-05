@@ -13,7 +13,7 @@
   
 
 ; função para trocar letras acentuadas por normais
-(define (trocaAcento caracter)
+(define (troca-acento caracter)
   (define com-acento
     (member caracter '(#\á #\ã #\â #\ê #\é #\í #\ó #\ô #\õ #\ú #\ç))
   )
@@ -39,11 +39,11 @@
        (cons #\_ (progresso(rest resposta) letras-adivinhadas letras-adivinhadas))
     ]
     [
-     (equal? (trocaAcento (first resposta)) (first aux-letras-adivinhadas))
+     (equal? (troca-acento (first resposta)) (first aux-letras-adivinhadas))
                (cons (first resposta) (progresso (rest resposta) letras-adivinhadas letras-adivinhadas))
     ]
     [
-     (not (equal? (trocaAcento (first resposta)) (first aux-letras-adivinhadas)))
+     (not (equal? (troca-acento (first resposta)) (first aux-letras-adivinhadas)))
                     (progresso resposta letras-adivinhadas (rest aux-letras-adivinhadas))
     ]
   )
@@ -73,11 +73,11 @@
 ; se a letra estiver no array, nao fazer nada
 ; se a letra nao estiver no array, fazer vidas - 1
 
-(define (checar-vidas v l r)
+(define (checar-vidas vidas letra resposta)
   (cond
-    [(empty? r) (sub1 v)]
-    [(equal? (trocaAcento (first r)) l) v]
-    [else (checar-vidas v l (rest r))]
+    [(empty? resposta) (sub1 vidas)]
+    [(equal? (troca-acento (first resposta)) letra) vidas]
+    [else (checar-vidas vidas letra (rest resposta))]
   )
 )
 
