@@ -49,7 +49,8 @@
   )
 )
 
-(define (print-progresso letras-adivinhadas resposta)  ; usa a função de cima pra printar
+; Usa a função de cima pra printar as letras
+(define (print-progresso letras-adivinhadas resposta)  
   (define itemResposta (string->list resposta))  ; transforma a string resposta em lista
 
   (displayln (list->string (progresso itemResposta letras-adivinhadas letras-adivinhadas)))  ; pega o retorno de progresso e transforma a lista em string pra retornar
@@ -67,26 +68,24 @@
 )
 
 
-
-;vidas
-;comparar letras-advinhadas com resposta
-; se a letra estiver no array, nao fazer nada
-; se a letra nao estiver no array, fazer vidas - 1
-
+;A função abaixo retorna a quantidade de vidas que o(a) jogador(a) ainda tem
 (define (checar-vidas vidas letra resposta)
   (cond
-    [(empty? resposta) (sub1 vidas)]
-    [(equal? (troca-acento (first resposta)) letra) vidas]
-    [else (checar-vidas vidas letra (rest resposta))]
+    [(empty? resposta) (sub1 vidas)] ; já percorreu todo o array e não achou a letra
+    [(equal? (troca-acento (first resposta)) letra) vidas] ; a primeira letra do array resposta é igual à letra digitada
+    [else (checar-vidas vidas letra (rest resposta))] ; nenhuma das anteriores, chama até achar uma condição que bata
   )
 )
 
+;A função abaixo gera uma lista com as letras do alfabeto
 (define gerar-letra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
+;A função abaixo printa o desenho de troféu quando a pessoa ganhar o jogo
 (define (print-vitoria resposta letras-adivinhadas)
         (cond [(checar-vitoria (string->list resposta) letras-adivinhadas) (displayln "\n\nParabéns, você ganhou!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
 ))
 
+;A função abaixo printa o desenho do gatinho triste quando a pessoa perder o jogo
 (define (print-derrota vidas)
         (cond [(equal? vidas 0) (displayln "\n\nQue pena, você perdeu!!\n
                      ⢀⣀⡤⠔⠒⠒⠚⠹⣄⣀⣀⠤⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -113,6 +112,7 @@
 )
 )
 
+;A função abaixo printa o desenho do homenzinho de acordo com as vidas que vai perdendo
 (define (print-forca vidas)
   (cond
     [(equal? vidas 6) (displayln "
