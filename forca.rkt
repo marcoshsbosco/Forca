@@ -5,7 +5,6 @@
 
 
 (define entrada (open-input-file "palavras.txt"))
-(define entradaAlfabeto (open-input-file "alfabeto.txt"))
 
 (define (carregar-palavras n)  ; var n é a linha a ser lida
   (define palavra (read-line entrada))
@@ -16,15 +15,6 @@
   )
 )
 
-(define (carregar-alfabeto letraRamdom)  
-  (define letraAlfabetoGerada (read-line entradaAlfabeto))
-
-  ;(println letra)
-  (if (= letraRamdom 0) 
-     letraAlfabetoGerada
-     (carregar-alfabeto (sub1 letraRamdom)) 
-  )
-)
 
 
 
@@ -68,7 +58,7 @@
 (define (print-progresso letras-adivinhadas resposta)  ; usa a função de cima pra printar
   (define r (string->list resposta))  ; transforma a string resposta em lista
 
-  (println (list->string (progresso r letras-adivinhadas letras-adivinhadas)))  ; pega o retorno de progresso e transforma a lista em string pra retornar
+  (displayln (list->string (progresso r letras-adivinhadas letras-adivinhadas)))  ; pega o retorno de progresso e transforma a lista em string pra retornar
 )
 
 ; Checagem de condição de vitória
@@ -115,21 +105,25 @@
   )
  )
 
-(define letraRamdom (random 26))
+
+(define gerarLetra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
 (define (automaticForca letras-adivinhadas resposta vidas)
-  (define letraGerada (carregar-alfabeto letraRamdom))
-  (println letraGerada)
-  (println vidas)
+  (define letraRamdom (random 26))
+  (define letraGerada (list-ref gerarLetra letraRamdom))
+  (displayln (string-append "\n***************************************Você tem " (~r vidas) " vidas\n"))
+  (displayln (string-append "\nLetra gerada: " letraGerada))
+
 
   (print-progresso letras-adivinhadas resposta)
 
   (cond
     [(checar-vitoria (string->list resposta) letras-adivinhadas) (println "Vitória!")]
-    [(equal? vidas 0) (println "Que pena, você perdeu!")]
+    [(equal? vidas 0) (displayln "\nQue pena, você perdeu!")]
     [else
-      (automaticForca
-          (cons letraGerada letras-adivinhadas) resposta (checar-vidas vidas letraGerada (string->list resposta))
+       (define letra (first (string->list letraGerada)))
+       (automaticForca
+          (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta))
       )
     ]
   )
