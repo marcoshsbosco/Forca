@@ -89,16 +89,95 @@
 
 
 
+
+
+(define gerarLetra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
+
+(define (print-vitoria resposta letras-adivinhadas)
+        (cond [(checar-vitoria (string->list resposta) letras-adivinhadas) (displayln "\n\nParabéns, você ganhou!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
+))
+
+(define (print-derrota vidas)
+        (cond [(equal? vidas 0) (displayln "\n\nQue pena, você perdeu!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
+))
+
+(define (print-forca vidas)
+  (cond
+    [(equal? vidas 5) (displayln "
+                            ___________
+                        | /        | 
+                        |/        ( )
+                        |          |
+                        |         / 
+                        |
+                       ")
+      ]
+     [(equal? vidas 4)
+                 (displayln "
+                            ___________
+                        | /        | 
+                        |/        ( )
+                        |          |
+                        |          
+                        |
+                        ")
+     ]
+     [(equal? vidas 3)
+                 (displayln "
+                            ___________
+                        | /        | 
+                        |/        ( )
+                        |          
+                        |          
+                        |
+                        ")
+     ]
+     [(equal? vidas 2)
+                 (displayln "
+                            ___________
+                        | /        | 
+                        |/        ( 
+                        |          
+                        |          
+                        |
+                        ")
+     ]
+     [(equal? vidas 1)
+                 (displayln "
+                            ___________
+                        | /        | 
+                        |/         
+                        |          
+                        |          
+                        |
+                        ")
+     ]
+     [(equal? vidas 0)
+                 (displayln "
+                            ___________
+                        | /         
+                        |/         
+                        |          
+                        |          
+                        |
+                        ")
+     ]
+  )
+)
+
 ; Lógica principal
 (define (loop letras-adivinhadas resposta vidas)
-  (println vidas)
+  (displayln (string-append "\n***************************************Você tem " (~r vidas) " vidas\n"))
+  (print-forca vidas)
+
   (print-progresso letras-adivinhadas resposta)
 
   (cond
-    [(checar-vitoria (string->list resposta) letras-adivinhadas) (println "Vitória!")]
-    [(equal? vidas 0) (println "Que pena, você perdeu!")]
+    [(checar-vitoria (string->list resposta) letras-adivinhadas) (print-vitoria resposta letras-adivinhadas)]
+    [(equal? vidas 0) (print-derrota vidas)]
     [else
       (define letra (first (string->list (read-line))))
+      (displayln (string-append "Letra digitada: " (read-line) "\n"))
       (loop (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta))
       )
     ]
@@ -106,20 +185,18 @@
  )
 
 
-(define gerarLetra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
-
 (define (automaticForca letras-adivinhadas resposta vidas)
   (define letraRamdom (random 26))
   (define letraGerada (list-ref gerarLetra letraRamdom))
   (displayln (string-append "\n***************************************Você tem " (~r vidas) " vidas\n"))
-  (displayln (string-append "\nLetra gerada: " letraGerada))
-
-
+  (print-forca vidas)
+  (displayln (string-append "Letra gerada: " letraGerada "\n"))
   (print-progresso letras-adivinhadas resposta)
 
   (cond
-    [(checar-vitoria (string->list resposta) letras-adivinhadas) (println "Vitória!")]
-    [(equal? vidas 0) (displayln "\nQue pena, você perdeu!")]
+    ;[(checar-vitoria (string->list resposta) letras-adivinhadas)  (displayln "\n\nParabéns, você ganhou!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
+    [(checar-vitoria (string->list resposta) letras-adivinhadas) (print-vitoria resposta letras-adivinhadas)]
+    [(equal? vidas 0) (print-derrota vidas)]
     [else
        (define letra (first (string->list letraGerada)))
        (automaticForca
@@ -134,9 +211,8 @@
 (define resposta (carregar-palavras n))
 (println (string-append "DEBUG: a resposta é " resposta))
 
+(loop '() resposta 5)
 
-;(loop '() resposta 5)
 
-
-(automaticForca '() resposta 5)
+;(automaticForca '() resposta 5)
 
