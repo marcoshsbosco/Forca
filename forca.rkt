@@ -1,25 +1,19 @@
 #lang racket
 
 ; Carregamento do banco de palavras
-(define n (random 36172))  ; var n de 0 a 36172 exclusivo
 
+(define (carregar-palavras linha entrada)  ; linha é a linha a ser lida no arquivo entrada e entrada é o arquivo de palavras               
+  (define palavra (read-line entrada)) ; le as palavras do arquivo de palavras (entrada) 
 
-(define entrada (open-input-file "palavras.txt"))
-
-(define (carregar-palavras n)  ; var n é a linha a ser lida
-  (define palavra (read-line entrada))
-
-  (if (= n 0)  ; se estivermos na linha correspondente a var n
+  (if (= linha 0)  ; se estivermos na linha correspondente a var n
     palavra  ; retorna a palavra
-    (carregar-palavras (sub1 n))  ; joga palavra no lixo e vai pra próxima linha
+    (carregar-palavras (sub1 linha) entrada)  ; joga palavra no lixo e vai pra próxima linha
   )
 )
-
-
-
+  
 
 ; função para trocar letras acentuadas por normais
-(define (troca caracter)
+(define (trocaAcento caracter)
   (define com-acento
     (member caracter '(#\á #\ã #\â #\ê #\é #\í #\ó #\ô #\õ #\ú #\ç))
   )
@@ -38,27 +32,27 @@
 )
 
 ; Display das letras encontradas
-(define (progresso r letras-adivinhadas la) 
+(define (progresso resposta letras-adivinhadas aux-letras-adivinhadas) 
   (cond
-    [(empty? r) empty]
-    [(empty? la)
-       (cons #\_ (progresso(rest r) letras-adivinhadas letras-adivinhadas))
+    [(empty? resposta) empty]
+    [(empty? aux-letras-adivinhadas)
+       (cons #\_ (progresso(rest resposta) letras-adivinhadas letras-adivinhadas))
     ]
     [
-     (equal? (troca (first r)) (first la))
-               (cons (first r) (progresso (rest r) letras-adivinhadas letras-adivinhadas))
+     (equal? (trocaAcento (first resposta)) (first aux-letras-adivinhadas))
+               (cons (first resposta) (progresso (rest resposta) letras-adivinhadas letras-adivinhadas))
     ]
     [
-     (not (equal? (troca (first r)) (first la)))
-                    (progresso r letras-adivinhadas (rest la))
+     (not (equal? (trocaAcento (first resposta)) (first aux-letras-adivinhadas)))
+                    (progresso resposta letras-adivinhadas (rest aux-letras-adivinhadas))
     ]
   )
 )
 
 (define (print-progresso letras-adivinhadas resposta)  ; usa a função de cima pra printar
-  (define r (string->list resposta))  ; transforma a string resposta em lista
+  (define itemResposta (string->list resposta))  ; transforma a string resposta em lista
 
-  (displayln (list->string (progresso r letras-adivinhadas letras-adivinhadas)))  ; pega o retorno de progresso e transforma a lista em string pra retornar
+  (displayln (list->string (progresso itemResposta letras-adivinhadas letras-adivinhadas)))  ; pega o retorno de progresso e transforma a lista em string pra retornar
 )
 
 ; Checagem de condição de vitória
@@ -82,14 +76,10 @@
 (define (checar-vidas v l r)
   (cond
     [(empty? r) (sub1 v)]
-    [(equal? (troca (first r)) l) v]
+    [(equal? (trocaAcento (first r)) l) v]
     [else (checar-vidas v l (rest r))]
   )
 )
-
-
-
-
 
 (define gerarLetra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
@@ -98,16 +88,49 @@
 ))
 
 (define (print-derrota vidas)
-        (cond [(equal? vidas 0) (displayln "\n\nQue pena, você perdeu!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
-))
+        (cond [(equal? vidas 0) (displayln "\n\nQue pena, você perdeu!!\n
+                     ⢀⣀⡤⠔⠒⠒⠚⠹⣄⣀⣀⠤⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠓⠒⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⡤⠴⠒⠒⠒⠒⠒⠒⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣧⠤⠒⠒⠚⠛⠓⠒⠒⠤⣀⠀⠀
+⠀⠀⠀⠀⡤⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⡄
+⠀⠀⢀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠼
+⠀⢀⡜⢀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠀⠀⠀⠀⠀⠀⠘⢦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠴⠒⠊⠉⠀⠀
+⠀⠈⠉⠉⠀⠀⠀⠀⠉⠉⢘⠇⠀⠀⠀⠀⠀⠀⢀⣠⠴⠚⠉⠙⢲⡀⠀⠀⠀⠀⢠⠎⠉⠉⠑⢦⡀⠀⠀⠀⠀⠀⢾⡁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠏⠀⠀⠀⠀⠀⠀⢠⠞⢀⣠⣤⣄⠀⠀⣷⠀⠀⠀⠀⡼⠀⣰⣶⣦⡄⠙⣆⠀⠀⠀⠀⠀⠹⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⡞⠀⠀⠀⠀⠀⠀⢠⠏⠀⣾⣿⣯⣽⡆⠀⡏⠀⠀⠀⠀⣇⠀⣿⣿⣾⣷⠀⠘⡆⠀⠀⠀⠀⢸⠁⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣸⠁⠀⠀⠀⠀⠀⠀⢯⠀⠀⠹⣿⣿⡿⠃⡸⠁⠀⠀⠀⠀⠸⡄⠙⠿⠿⠃⠀⠀⢻⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠈⢧⠀⠀⠀⠀⠀⡴⠁⠀⠀⠀⠀⠀⠀⠙⢆⡀⠀⠀⠀⢀⡞⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⠤⠤⠴⠊⠀⠀⠀⠀⣠⡆⠀⠀⠀⠀⠙⠲⠤⠴⠊⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠴⠯⠷⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠀⠀⠀⠀⠀⠀
+⠈⠀⠀⠉⠉⠁⠒⠉⠉⠹⡍⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠓⠒⠒⠒⠒⠦⣴⠗⠒⠤⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣄⠀⢠⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠽⢤⠀⠀⠀⠀⠀⠀⠲⠄⣀⡀⠀⠀⡴⠃⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠼⢶⡋⠀⠀⠀⢀⡀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣲⠞⠓⠲⠶⢄⡀⢀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠖⠊⠑⠋⠀⠀⠀⠙⢦⣀⡴⠋⠉⡟⠉⠉⡷⠚⢳⠀⠀⠀⠀⠀⣠⠖⢲⠖⠒⣤⠖⢢⠞⠁⠀⠀⠀⠀⠀⠈⠀⠈⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⣰⠃⠀⣰⠃⠀⣸⠒⠒⠢⠤⢤⡇⠀⡎⠀⣸⠁⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠦⠖⠙⠤⠴⠛⠦⠴⠃⠀⠀⠀⠀⠀⠣⣤⣧⣠⣧⣀⡠⠋⠀⠀⠀⠀⠀⠀⠀⠀
+                                           
+                                           ")]
+)
+)
 
 (define (print-forca vidas)
   (cond
+    [(equal? vidas 6) (displayln "
+                            ___________
+                        | /        | 
+                        |/        ( )
+                        |         /|\\
+                        |          |
+                        |         / \\
+                        |
+                       ")
+      ]
     [(equal? vidas 5) (displayln "
                             ___________
                         | /        | 
                         |/        ( )
-                        |          |
+                        |         /|\\
+                        |          | 
                         |         / 
                         |
                        ")
@@ -117,50 +140,55 @@
                             ___________
                         | /        | 
                         |/        ( )
-                        |          |
+                        |         /|\\
+                        |          | 
                         |          
                         |
-                        ")
+                       ")
      ]
      [(equal? vidas 3)
                  (displayln "
                             ___________
                         | /        | 
                         |/        ( )
-                        |          
+                        |         /|
+                        |          | 
                         |          
                         |
-                        ")
+                       ")
      ]
      [(equal? vidas 2)
                  (displayln "
                             ___________
                         | /        | 
-                        |/        ( 
-                        |          
+                        |/        ( )
+                        |          |
+                        |          | 
                         |          
                         |
-                        ")
+                       ")
      ]
      [(equal? vidas 1)
                  (displayln "
                             ___________
                         | /        | 
-                        |/         
+                        |/        ( )
                         |          
+                        |           
                         |          
                         |
-                        ")
+                       ")
      ]
      [(equal? vidas 0)
                  (displayln "
                             ___________
-                        | /         
-                        |/         
+                        | /        | 
+                        |/       
                         |          
+                        |           
                         |          
                         |
-                        ")
+                       ")
      ]
   )
 )
@@ -169,6 +197,11 @@
 (define (loop letras-adivinhadas resposta vidas)
   (displayln (string-append "\n***************************************Você tem " (~r vidas) " vidas\n"))
   (print-forca vidas)
+  (displayln (string-append "A resposta tem " (~r (length (string->list resposta))) " letras"))
+
+  (displayln "\nLetras adivinhadas: ")
+  (void (map display letras-adivinhadas))
+  (displayln "\n")
 
   (print-progresso letras-adivinhadas resposta)
 
@@ -177,12 +210,14 @@
     [(equal? vidas 0) (print-derrota vidas)]
     [else
       (define letra (first (string->list (read-line))))
-      (displayln (string-append "Letra digitada: " (read-line) "\n"))
+      (displayln (string-append "Letra digitada: " (make-string 1 letra) "\n"))
       (loop (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta))
       )
     ]
   )
  )
+
+; Automatico - lógica principal
 
 
 (define (automaticForca letras-adivinhadas resposta vidas)
@@ -191,10 +226,14 @@
   (displayln (string-append "\n***************************************Você tem " (~r vidas) " vidas\n"))
   (print-forca vidas)
   (displayln (string-append "Letra gerada: " letraGerada "\n"))
+  
+  (displayln "\nLetras adivinhadas: ")
+  (void (map display letras-adivinhadas))
+  (displayln "\n")
+
   (print-progresso letras-adivinhadas resposta)
 
   (cond
-    ;[(checar-vitoria (string->list resposta) letras-adivinhadas)  (displayln "\n\nParabéns, você ganhou!\n       ___________      \n      '._==_==_=_.'     \n      .-\\:      /-.    \n     | (|:.     |) |    \n      '-|:.     |-'     \n        \\::.    /      \n         '::. .'        \n           ) (          \n         _.' '._        \n        '-------'       ")]
     [(checar-vitoria (string->list resposta) letras-adivinhadas) (print-vitoria resposta letras-adivinhadas)]
     [(equal? vidas 0) (print-derrota vidas)]
     [else
@@ -208,11 +247,14 @@
 
 ; Execução propriamente dita
 "Forca!"
-(define resposta (carregar-palavras n))
-(println (string-append "DEBUG: a resposta é " resposta))
-
-(loop '() resposta 5)
 
 
-;(automaticForca '() resposta 5)
+(define resposta (carregar-palavras (random 36172) (open-input-file "palavras.txt")))
+(println (string-append "A resposta é " resposta))
+(automaticForca '() resposta 6)
 
+
+(displayln "\n\n\n\n######################################Agora é sua vez############################################\n\n")
+(define newResposta (carregar-palavras (random 36172) (open-input-file "palavras.txt")))
+(loop '() newResposta  6) 
+(println (string-append "A resposta é: " newResposta))
