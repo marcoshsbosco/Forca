@@ -3,7 +3,9 @@
 ; Carregamento do banco de palavras
 (define n (random 36172))  ; var n de 0 a 36172 exclusivo
 
+
 (define entrada (open-input-file "palavras.txt"))
+(define entradaAlfabeto (open-input-file "alfabeto.txt"))
 
 (define (carregar-palavras n)  ; var n é a linha a ser lida
   (define palavra (read-line entrada))
@@ -13,6 +15,18 @@
     (carregar-palavras (sub1 n))  ; joga palavra no lixo e vai pra próxima linha
   )
 )
+
+(define (carregar-alfabeto letraRamdom)  
+  (define letraAlfabetoGerada (read-line entradaAlfabeto))
+
+  ;(println letra)
+  (if (= letraRamdom 0) 
+     letraAlfabetoGerada
+     (carregar-alfabeto (sub1 letraRamdom)) 
+  )
+)
+
+
 
 ; função para trocar letras acentuadas por normais
 (define (troca caracter)
@@ -34,12 +48,20 @@
 )
 
 ; Display das letras encontradas
-(define (progresso r letras-adivinhadas la)  ; retorna uma lista com as letras e underlines dependendo das letras adivinhadas
+(define (progresso r letras-adivinhadas la) 
   (cond
     [(empty? r) empty]
-    [(empty? la) (cons #\_ (progresso (rest r) letras-adivinhadas letras-adivinhadas))]
-    [(equal? (troca (first r)) (first la)) (cons (first r) (progresso (rest r) letras-adivinhadas letras-adivinhadas))]
-    [(not (equal? (troca (first r)) (first la))) (progresso r letras-adivinhadas (rest la))]
+    [(empty? la)
+       (cons #\_ (progresso(rest r) letras-adivinhadas letras-adivinhadas))
+    ]
+    [
+     (equal? (troca (first r)) (first la))
+               (cons (first r) (progresso (rest r) letras-adivinhadas letras-adivinhadas))
+    ]
+    [
+     (not (equal? (troca (first r)) (first la)))
+                    (progresso r letras-adivinhadas (rest la))
+    ]
   )
 )
 
@@ -53,7 +75,9 @@
 (define (checar-vitoria resposta letras-adivinhadas)
   (cond
     [(empty? resposta) #t]
-    [(member (first resposta) letras-adivinhadas) (checar-vitoria (rest resposta) letras-adivinhadas)]
+    [(member (first resposta) letras-adivinhadas)
+               (checar-vitoria (rest resposta) letras-adivinhadas)
+    ]
     [else #f]
   )
 )
@@ -85,7 +109,28 @@
     [(equal? vidas 0) (println "Que pena, você perdeu!")]
     [else
       (define letra (first (string->list (read-line))))
-      (loop (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta)))
+      (loop (cons letra letras-adivinhadas) resposta (checar-vidas vidas letra (string->list resposta))
+      )
+    ]
+  )
+ )
+
+(define letraRamdom (random 26))
+
+(define (automaticForca letras-adivinhadas resposta vidas)
+  (define letraGerada (carregar-alfabeto letraRamdom))
+  (println letraGerada)
+  (println vidas)
+
+  (print-progresso letras-adivinhadas resposta)
+
+  (cond
+    [(checar-vitoria (string->list resposta) letras-adivinhadas) (println "Vitória!")]
+    [(equal? vidas 0) (println "Que pena, você perdeu!")]
+    [else
+      (automaticForca
+          (cons letraGerada letras-adivinhadas) resposta (checar-vidas vidas letraGerada (string->list resposta))
+      )
     ]
   )
  )
@@ -95,5 +140,9 @@
 (define resposta (carregar-palavras n))
 (println (string-append "DEBUG: a resposta é " resposta))
 
-(loop '() resposta 5)
+
+;(loop '() resposta 5)
+
+
+(automaticForca '() resposta 5)
 
