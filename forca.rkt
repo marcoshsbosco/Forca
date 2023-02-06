@@ -1,5 +1,8 @@
 #lang racket
 
+(require rackunit)
+(require rackunit/text-ui)
+
 (define gerar-letra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
 ; Int Entrada -> String
@@ -16,6 +19,17 @@
 
 ; Char -> Char
 ; função para trocar uma letra acentuada pela equivalente sem acento
+(define troca-acento-tests
+  (test-suite
+    "testes troca-acento"
+
+    (check-equal? (troca-acento #\ã) #\a)
+    (check-equal? (troca-acento #\ç) #\c)
+    (check-equal? (troca-acento #\ú) #\u)
+    (check-equal? (troca-acento #\e) #\e)
+  )
+)
+
 (define (troca-acento caracter)
   (define com-acento
     (member caracter '(#\á #\ã #\â #\ê #\é #\í #\ó #\ô #\õ #\ú #\ç))
@@ -264,6 +278,8 @@
 
 
 ; Execução propriamente dita
+(run-tests (test-suite "Bateria de testes" troca-acento-tests))
+
 "Forca!"
 
 (define resposta (carregar-palavras (random 36172) (open-input-file "palavras.txt")))
