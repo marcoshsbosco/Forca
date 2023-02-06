@@ -2,7 +2,7 @@
 
 (define gerar-letra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
-
+; Int Entrada -> String
 ; carregamento do banco de palavras
 (define (carregar-palavras linha entrada)  ; linha é a linha a ser lida no arquivo entrada e entrada é o arquivo de palavras
   (define palavra (read-line entrada)) ; lê uma palavra do arquivo da entrada
@@ -14,6 +14,7 @@
 )
 
 
+; Char -> Char
 ; função para trocar uma letra acentuada pela equivalente sem acento
 (define (troca-acento caracter)
   (define com-acento
@@ -34,6 +35,7 @@
 )
 
 
+; List List List -> String
 ; display das letras encontradas
 (define (progresso resposta letras-adivinhadas aux-letras-adivinhadas) 
   (cond
@@ -51,6 +53,7 @@
 )
 
 
+; List String -> Void
 ; chama a função de cima para printar as letras
 (define (print-progresso letras-adivinhadas resposta)
   (define item-resposta (string->list resposta))  ; transforma a string resposta em lista
@@ -59,6 +62,7 @@
 )
 
 
+; List List -> Bool
 ; checagem de condição de vitória
 (define (checar-vitoria resposta letras-adivinhadas)
   (cond
@@ -71,6 +75,7 @@
 )
 
 
+; Int Char List -> Int
 ; retorna a quantidade de vidas restantes
 (define (checar-vidas vidas letra resposta)
   (cond
@@ -81,6 +86,7 @@
 )
 
 
+; String List -> Void
 ; printa o desenho de troféu quando a pessoa ganha o jogo
 (define (print-vitoria resposta letras-adivinhadas)
   (cond
@@ -91,6 +97,7 @@
 )
 
 
+; Int -> Void
 ; printa o desenho do gatinho triste quando a pessoa perder o jogo
 (define (print-derrota vidas)
   (cond
@@ -120,6 +127,7 @@
 )
 
 
+; Int -> Void
 ; printa o desenho do homenzinho de acordo com as vidas que vai perdendo
 (define (print-forca vidas)
   (cond
@@ -197,6 +205,7 @@
 )
 
 
+; List String Int -> Void
 ; lógica principal
 (define (loop letras-adivinhadas resposta vidas)
   (displayln "---------------------------------------------------")
@@ -222,6 +231,8 @@
   )
 )
 
+
+; List String Int -> Void
 ; resolução automática do jogo
 (define (forca-automatica letras-adivinhadas resposta vidas)
   (define letra-random (random 26))  ; número aleatório para escolha de letra
