@@ -292,7 +292,8 @@
    )
 )
 
-(loop '() (classe-palavras)  6)
+(define new-resposta (classe-palavras))
 
-;printa a resposta no fim do jogo
-(println (string-append "A resposta é: " (classe-palavras)))  ; printa a resposta no fim do jogo
+(loop '() new-resposta  6)
+
+(println (string-append "A resposta é: " new-resposta))  ; printa a resposta no fim do jogo
