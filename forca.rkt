@@ -6,7 +6,7 @@
 (define gerar-letra (list "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))
 
 ; Int Entrada -> String
-; carregamento do banco de palavras
+; carregamento do banco de palavras (usada recursão em cauda, acumulador, decomposição de naturais)
 (define (carregar-palavras linha entrada)  ; linha é a linha a ser lida no arquivo entrada e entrada é o arquivo de palavras
   (define palavra (read-line entrada)) ; lê uma palavra do arquivo da entrada
 
@@ -18,7 +18,7 @@
 
 
 ; Char -> Char
-; função para trocar uma letra acentuada pela equivalente sem acento
+; função para trocar uma letra acentuada pela equivalente sem acento (usado teste unitário)
 (define troca-acento-tests
   (test-suite
     "testes troca-acento"
@@ -50,7 +50,7 @@
 
 
 ; List List List -> String
-; display das letras encontradas
+; display das letras encontradas (usada recursão em cauda, manipulação de listas)
 (define (progresso resposta letras-adivinhadas aux-letras-adivinhadas) 
   (cond
     [(empty? resposta) empty]  ; todas as letras de resposta foram printadas (ou _ no lugar)
@@ -77,7 +77,7 @@
 
 
 ; List List -> Bool
-; checagem de condição de vitória
+; checagem de condição de vitória (usada recursão em cauda, manipulação de listas)
 (define (checar-vitoria resposta letras-adivinhadas)
   (cond
     [(empty? resposta) #t]  ; fim da recursão, todas as letras analisadas - vitória
@@ -90,7 +90,7 @@
 
 
 ; Int Char List -> Int
-; retorna a quantidade de vidas restantes
+; retorna a quantidade de vidas restantes (usada recursão em cauda, manipulação de listas)
 (define (checar-vidas vidas letra resposta)
   (cond
     [(empty? resposta) (sub1 vidas)]  ; já percorreu toda a lista e não achou a letra - subtrai uma vida
@@ -220,7 +220,7 @@
 
 
 ; List String Int -> Void
-; lógica principal
+; lógica principal (usada recursão em cauda, manipulação de listas, acumulador)
 (define (loop letras-adivinhadas resposta vidas)
   (displayln "---------------------------------------------------")
   (displayln (string-append "\nVocê tem " (~r vidas) " vidas\n"))
@@ -247,7 +247,7 @@
 
 
 ; List String Int -> Void
-; resolução automática do jogo
+; resolução automática do jogo (usada recursão em cauda, manipulação de listas, acumulador)
 (define (forca-automatica letras-adivinhadas resposta vidas)
   (define letra-random (random 26))  ; número aleatório para escolha de letra
   (define letra-gerada (list-ref gerar-letra letra-random))  ; letra escolhida aleatoriamente
