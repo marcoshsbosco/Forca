@@ -283,10 +283,10 @@
                 (carregar-palavras (random 36172) (open-input-file "substantivo.txt"))
      ]
      [(equal? classe-escolhida "Adjetivo")
-                (carregar-palavras (random 36172) (open-input-file "adjetivo.txt"))
+                (carregar-palavras (random 24142) (open-input-file "adjetivo.txt"))
      ]
      [(equal? classe-escolhida "Verbo")
-                (carregar-palavras (random 36172) (open-input-file "verbo.txt"))
+                (carregar-palavras (random 14279) (open-input-file "verbo.txt"))
      ]
     
    )
