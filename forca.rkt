@@ -282,12 +282,34 @@
 
 "Forca!"
 
-(define resposta (carregar-palavras (random 36172) (open-input-file "palavras.txt")))
+(define resposta (carregar-palavras (random 36172) (open-input-file "substantivo.txt")))
 (println (string-append "A resposta é " resposta))
 (forca-automatica '() resposta 6)
 
 (displayln "\n\n\n\n######################################Agora é sua vez############################################\n\n")
 
-(define newResposta (carregar-palavras (random 36172) (open-input-file "palavras.txt")))
-(loop '() newResposta  6) 
-(println (string-append "A resposta é: " newResposta))  ; printa a resposta no fim do jogo
+(define (classe-palavras)
+   (displayln "\nDigite uma classe de palavra:\n Adjetivo \n Substantivo \n Verbo\n ")
+
+   (define classe-escolhida (read-line))
+   (displayln (string-append "\n\tClasse escolhida: " classe-escolhida))
+
+   (cond
+     [(equal? classe-escolhida "Substantivo")
+                (carregar-palavras (random 36172) (open-input-file "substantivo.txt"))
+     ]
+     [(equal? classe-escolhida "Adjetivo")
+                (carregar-palavras (random 24142) (open-input-file "adjetivo.txt"))
+     ]
+     [(equal? classe-escolhida "Verbo")
+                (carregar-palavras (random 14279) (open-input-file "verbo.txt"))
+     ]
+    
+   )
+)
+
+(define new-resposta (classe-palavras))
+
+(loop '() new-resposta  6)
+
+(println (string-append "A resposta é: " new-resposta))  ; printa a resposta no fim do jogo
